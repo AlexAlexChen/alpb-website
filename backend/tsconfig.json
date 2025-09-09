@@ -1,13 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "Node",
+    "rootDir": "./",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "types": ["node"],
-    "jsx": "react-jsx",
-    "allowJs": true,
-    "outDir": "./dist"
-  }
+    "allowJs": true,                // allow importing your existing .js files
+    "checkJs": false                // don’t type-check the JS files (for now)
+  },
+  "include": ["./**/*.ts", "./**/*.js", "types/**/*.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }
