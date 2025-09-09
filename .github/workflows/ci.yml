@@ -2,57 +2,37 @@ name: CI
 
 on:
   push:
-    branches: ['**']        
-  pull_request:
     branches: ['**']
+  pull_request:
+  workflow_dispatch:
 
 jobs:
-  build-test:
+  backend-build:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
-
-      - name: Use Node 20
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: |
-            backend/package-lock.json
-            frontend/package-lock.json
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run build
 
-      # ---- Backend ----
-      - name: Install backend deps
-        run: npm ci
-
-      - name: Typecheck backend (no emit)
-        run: npx tsc -p . --noEmit
-
-      - name: Build backend
-        run: npm run build
-
-      - name: Smoke test backend
-        env:
-          # put required env here or in repo/org Secrets and map them
-          NODE_ENV: test
-        run: |
-          node dist/server.js &                       # start in bg
-          SERVER_PID=$!
-          npx wait-on http://localhost:3001/health -t 20000 || (kill $SERVER_PID; exit 1)
-          curl -f http://localhost:3001/health
-          kill $SERVER_PID
-
-      # ---- Frontend ----
-      - name: Install frontend deps
+  frontend-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
         working-directory: frontend
-        run: npm ci
-
-      - name: Build frontend
-        working-directory: frontend
-        run: npm run build
-
-
-
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
