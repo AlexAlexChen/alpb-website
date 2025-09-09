@@ -41,7 +41,5 @@
     "lint": "eslint .",
     "format": "prettier . --write"
   },
-  "engines": {
-    "node": ">=20"
-  }
+  "engines": { "node": ">=20 <21" }
 }

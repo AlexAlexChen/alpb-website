@@ -1,0 +1,5 @@
+cd backend
+echo 20 > .nvmrc
+git add .nvmrc
+git commit -m "chore: pin Node 20 for Render"
+git push origin ci-playground
